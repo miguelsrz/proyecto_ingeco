@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulador Solar – Cundinamarca</title>
+  <!-- Tailwind via CDN (desarrollo). Para CLI en producción ver comentario en README -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <nav class="bg-blue-900 text-white px-6 py-4 flex justify-between items-center">
+    <span class="font-bold">☀️ Simulador Solar</span>
+    <div class="flex gap-6 text-sm">
+      <a href="index.html" class="hover:text-yellow-300">Inicio</a>
+      <a href="simulador.html" class="hover:text-yellow-300">Simulador</a>
+    </div>
+  </nav>
+
+  <header class="bg-blue-800 text-white text-center py-20 px-6">
+    <h1 class="text-3xl font-extrabold mb-3">Simulador Económico de Paneles Solares</h1>
+    <p class="text-blue-200 mb-8 max-w-xl mx-auto">
+      Evalúa la viabilidad de instalación fotovoltaica en Cundinamarca, Colombia.
+    </p>
+    <a href="simulador.html"
+       class="bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold px-8 py-3 rounded-xl text-sm">
+      Ir al Simulador →
+    </a>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-6 py-14 flex-1">
+    <p class="text-slate-600 leading-relaxed mb-10">
+      Herramienta académica del curso de Ingeniería Económica de la Universidad Nacional
+      de Colombia. Estima la rentabilidad de instalar paneles solares usando datos de
+      radiación solar del IDEAM y tarifas eléctricas del sector energético colombiano.
+    </p>
+
+    <h2 class="text-xl font-bold text-blue-900 mb-4">Equipo - Grupo 4</h2>
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-sm text-slate-600">
+        <li>Samuel Gerard Alape Hastamorir</li>
+        <li>Santiago Cardenas Rodriguez</li>
+        <li>Johan Sebastián Palacio Novoa</li>
+        <li>Sebastian Ignacio Parra Diaz</li>
+        <li>Hugo Alejandro Rodriguez Ruiz</li>
+        <li>Miguel Angel Suarez Montiel</li>
+      </ul>
+      <p class="mt-4 text-xs text-slate-400">
+        Universidad Nacional de Colombia | 2026-1S
+      </p>
+    </div>
+  </main>
+
+  <footer class="text-center text-xs text-slate-400 py-5 border-t border-slate-200">
+    Universidad Nacional de Colombia · Facultad de Ingeniería · 2026-1S
+  </footer>
+
+</body>
+</html>
