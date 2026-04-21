@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SolNova – Energía Solar para Colombia</title>
+  <title>RedSua – Energía Solar para Cundinamarca</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -242,7 +242,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      opacity: 0.35;
+      opacity: 0.6;
     }
 
     /* ── DATA STRIP ─────────────────────────────────────────── */
@@ -387,8 +387,8 @@
         <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
       </svg>
     </div>
-    <span class="font-bold text-lg tracking-tight text-white" style="font-family:'Playfair Display',serif;">
-      Sol<span style="color:var(--amber)">Nova</span>
+    <span class="font-bold text-xl tracking-tight text-white" style="font-family:'Playfair Display',serif;">
+      Red<span style="color:var(--amber)">Sua</span>
     </span>
   </a>
 
@@ -411,10 +411,10 @@
 
   <!-- Mobile hamburger -->
   <button id="menu-btn" class="md:hidden text-white p-2" onclick="toggleMenu()">
-    <svg id="icon-open"  class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <svg id="icon-open"  class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M4 6h16M4 12h16M4 18h16"/>
     </svg>
-    <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <svg id="icon-close" class="w-8 h-8 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="M6 18L18 6M6 6l12 12"/>
     </svg>
   </button>
@@ -424,7 +424,6 @@
 <div id="mobile-menu" class="hidden fixed inset-0 z-50 flex flex-col pt-20 px-8 pb-10 gap-6">
   <button onclick="toggleMenu()" class="absolute top-5 right-6 text-white">
     <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-      <path d="M6 18L18 6M6 6l12 12"/>
     </svg>
   </button>
   <a href="index.html"         onclick="toggleMenu()" class="text-2xl font-semibold text-white playfair">Inicio</a>
@@ -460,7 +459,7 @@
       </h1>
 
       <p class="hero-sub text-lg text-stone-400 max-w-md leading-relaxed mb-10">
-        SolNova es la plataforma que transforma los datos de radiación solar del IDEAM
+        RedSua es la plataforma que transforma los datos de radiación solar del IDEAM
         en decisiones de inversión claras. Simula, analiza y actúa.
       </p>
 
@@ -480,9 +479,9 @@
       <div class="hero-stats mt-14 flex flex-wrap gap-8">
         <div>
           <div class="text-2xl font-bold" style="color:var(--amber);font-family:'Playfair Display',serif;">
-            <span class="counter" data-target="15">0</span> municipios
+            <span class="counter" data-target="15">100</span> ubicaciones
           </div>
-          <div class="text-xs text-stone-500 mt-0.5 uppercase tracking-wide">Cundinamarca cubiertos</div>
+          <div class="text-xs text-stone-500 mt-0.5 uppercase tracking-wide">de Cundinamarca cubiertas</div>
         </div>
         <div class="w-px bg-stone-700"></div>
         <div>
@@ -496,7 +495,7 @@
           <div class="text-2xl font-bold" style="color:var(--amber);font-family:'Playfair Display',serif;">
             0 COP
           </div>
-          <div class="text-xs text-stone-500 mt-0.5 uppercase tracking-wide">Costo de la herramienta</div>
+          <div class="text-xs text-stone-500 mt-0.5 uppercase tracking-wide">Herramienta gratuita</div>
         </div>
       </div>
     </div>
@@ -506,7 +505,7 @@
       <div style="background:rgba(28,25,23,0.7);border:1px solid rgba(245,158,11,0.2);border-radius:24px;backdrop-filter:blur(12px);padding:2rem;max-width:360px;width:100%;">
         <div class="flex items-center justify-between mb-6">
           <span class="text-sm font-semibold text-stone-400">Estimación · Bogotá</span>
-          <span class="solar-badge text-xs px-3 py-1">En vivo</span>
+          <span class="solar-badge text-xs px-3 py-1">Actualizado</span>
         </div>
         <!-- Mock chart bars -->
         <div class="mb-6">
@@ -576,7 +575,7 @@
 <div class="data-strip py-10 px-6">
   <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
     <div class="reveal">
-      <div class="text-3xl font-black gradient-text playfair mb-1">3.5 – 5.2</div>
+      <div class="text-3xl font-black gradient-text playfair mb-1">3.6 – 5.2</div>
       <div class="text-xs text-stone-500 uppercase tracking-wide">kWh/m²/día en la región</div>
     </div>
     <div class="reveal reveal-delay-1">
@@ -595,7 +594,7 @@
 </div>
 
 
-<!--  SECCIÓN 1 – ¿Qué es SolNova? -->
+<!--  SECCIÓN 1 – ¿Qué es RedSua? -->
 <section class="py-28 px-6" style="background:var(--dark2);">
   <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
     <!-- Text -->
@@ -606,9 +605,9 @@
         <span class="gradient-text">fundamentadas en datos.</span>
       </h2>
       <p class="text-stone-400 leading-relaxed mb-6">
-        SolNova es un simulador económico académico desarrollado en la Universidad
-        Nacional de Colombia. Integra datos reales de radiación solar del IDEAM,
-        tarifas del sector eléctrico colombiano y modelos de ingeniería económica
+        RedSua es un simulador de viabilidad económica académico desarrollado en la Universidad
+        Nacional de Colombia. Integra datos reales de radiación solar del IDEAM, costos con reportes de IRENA, boletines del DANE 
+        y modelos de ingeniería económica
         para estimar la rentabilidad de instalar paneles solares en Cundinamarca.
       </p>
       <p class="text-stone-400 leading-relaxed mb-8">
@@ -618,10 +617,11 @@
       </p>
       <div class="quote-card">
         <p class="text-stone-300 text-sm leading-relaxed italic">
-          "La energía solar fotovoltaica se ha consolidado como una de las tecnologías
-          más accesibles para la generación de electricidad en Colombia."
+          "Promover soluciones tecnológicas y
+          sociales que permitan una transición energética justa, descentralizada e
+          inclusiva, adaptada a las necesidades del país."
         </p>
-        <p class="text-xs text-stone-600 mt-3">— Marco conceptual del proyecto, 2026</p>
+        <p class="text-xs text-stone-600 mt-3">— Plan Energetico Nacional, 2024 - 2054</p>
       </div>
     </div>
 
@@ -629,7 +629,7 @@
     <div class="reveal reveal-delay-2">
       <div style="background:var(--dark3);border:1px solid rgba(255,255,255,0.06);border-radius:24px;padding:2rem;">
         <p class="text-xs text-stone-500 uppercase tracking-widest mb-5">
-          Municipios de Cundinamarca cubiertos
+          Ubicaciones de Cundinamarca cubiertas
         </p>
         <div class="flex flex-wrap gap-2">
           <span class="region-pill"><span class="region-dot"></span>Bogotá</span>
@@ -646,7 +646,7 @@
           <span class="region-pill"><span class="region-dot"></span>Guaduas</span>
           <span class="region-pill"><span class="region-dot"></span>Pacho</span>
           <span class="region-pill"><span class="region-dot"></span>Ubaté</span>
-          <span class="region-pill"><span class="region-dot"></span>Simijaca</span>
+          <span class="region-pill"><span class="region-dot"></span>+85 ubicaciones</span>
         </div>
         <div style="height:1px;background:rgba(255,255,255,0.05);margin:1.5rem 0;"></div>
         <!-- Radiacion gradient bar -->
@@ -654,7 +654,7 @@
           Radiación solar diaria (kWh/m²)
         </p>
         <div class="flex items-center gap-3 mb-1">
-          <span class="text-xs text-stone-600">3.5</span>
+          <span class="text-xs text-stone-600">3.6</span>
           <div class="flex-1 h-3 rounded-full overflow-hidden" style="background:var(--dark);">
             <div style="height:100%;background:linear-gradient(90deg,#78350F,#F59E0B,#FDE68A);border-radius:999px;"></div>
           </div>
@@ -679,10 +679,11 @@
     <div class="text-center mb-16 reveal">
       <div class="amber-line mx-auto mb-6"></div>
       <h2 class="text-4xl md:text-5xl font-black mb-4">
-        ¿Qué calcula <span class="gradient-text">SolNova</span>?
+        ¿Qué calcula <span class="gradient-text">RedSua</span>?
       </h2>
       <p class="text-stone-400 max-w-xl mx-auto">
-        Tres indicadores clave de ingeniería económica para evaluar la rentabilidad de su proyecto solar.
+        Tres indicadores clave de ingeniería económica para evaluar la rentabilidad de su proyecto solar, 
+        adicionales en desarrollo.
       </p>
     </div>
 
@@ -753,10 +754,9 @@
         <div>
           <h3 class="text-2xl font-bold mb-3">Ingresa los datos de tu proyecto</h3>
           <p class="text-stone-400 leading-relaxed">
-            Selecciona tu municipio de Cundinamarca, el área disponible en el techo de
-            tu edificio o vivienda, y el costo estimado de instalación. La plataforma
-            carga automáticamente los datos de radiación solar del IDEAM y la tarifa
-            eléctrica de tu región.
+            Selecciona tu ciudad o municipio de Cundinamarca, el área disponible para instalación sea el techo de
+            tu edificio o vivienda, y el costo estimado de inversión. La plataforma
+            carga automáticamente los datos oficiales requeridos para tu análisis.
           </p>
         </div>
       </div>
@@ -786,7 +786,7 @@
           <p class="text-stone-400 leading-relaxed">
             Visualiza el flujo de caja año a año, los indicadores de viabilidad y
             una recomendación directa. Todo en pantalla, sin descargas ni fórmulas.
-            Comparte o descarga los resultados para tu análisis.
+            (Proximamente) Comparte o descarga los resultados para tu análisis.
           </p>
         </div>
       </div>
@@ -822,7 +822,7 @@
           <div class="flex justify-between items-center py-3"
                style="border-bottom:1px solid rgba(255,255,255,0.05);">
             <span class="text-sm text-stone-400">Radiación solar (Bogotá)</span>
-            <span class="font-bold" style="color:var(--amber);">3.5 kWh/m²/día</span>
+            <span class="font-bold" style="color:var(--amber);">3.6 kWh/m²/día</span>
           </div>
           <div class="flex justify-between items-center py-3"
                style="border-bottom:1px solid rgba(255,255,255,0.05);">
@@ -930,7 +930,7 @@
     <div class="solar-badge mx-auto mb-8">☀ Gratis · Sin registro</div>
     <h2 class="text-4xl md:text-5xl font-black mb-6 leading-tight">
       Descubre el potencial solar<br/>
-      <span class="gradient-text">de tu edificio hoy.</span>
+      <span class="gradient-text">de tu ubicación hoy.</span>
     </h2>
     <p class="text-stone-300 mb-10 text-lg">
       En menos de un minuto tienes el análisis económico completo
@@ -966,10 +966,10 @@
               <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
             </svg>
           </div>
-          <span class="font-bold text-white playfair">Sol<span style="color:var(--amber);">Nova</span></span>
+          <span class="font-bold text-white text-xl playfair">Red<span style="color:var(--amber);">Sua</span></span>
         </div>
         <p class="text-xs text-stone-500 leading-relaxed">
-          Simulador económico de paneles solares para Cundinamarca, Colombia.
+          Simulador de viabilidad económica de paneles solares para Cundinamarca, Colombia.
           Proyecto académico — Universidad Nacional de Colombia, 2026.
         </p>
       </div>
@@ -988,25 +988,25 @@
       <div>
         <h4 class="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Recursos</h4>
         <div class="space-y-2.5">
-          <a href="https://github.com/grupo4-solar" target="_blank" rel="noopener" class="footer-link block">
+          <a href="https://github.com/miguelsrz/RedSua" target="_blank" rel="noopener" class="footer-link block">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/>
             </svg>
             Repositorio GitHub
           </a>
-          <a href="#" class="footer-link block">
+          <a href="https://drive.google.com/file/d/1ohoJdk2vhKSOjxCHKttlZJj_u04H1z8S/view?usp=sharing" target="_blank" class="footer-link block">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
             </svg>
-            Descargar documento PDF
+            Visualizar documento PDF
           </a>
-          <a href="https://www.ideam.gov.co" target="_blank" rel="noopener" class="footer-link block">
+          <a href="https://www.andi.com.co/uploads/radiacion.compressed.pdf" target="_blank" rel="noopener" class="footer-link block">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
             </svg>
             Atlas Solar IDEAM
           </a>
-          <a href="https://www.dane.gov.co" target="_blank" rel="noopener" class="footer-link block">
+          <a href="https://www.dane.gov.co/files/operaciones/CAE-FE/bol-CAE-FE-2023p.pdf" target="_blank" rel="noopener" class="footer-link block">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
             </svg>
@@ -1017,16 +1017,13 @@
 
       <!-- Equipo -->
       <div>
-        <h4 class="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Equipo – Grupo 4</h4>
+        <h4 class="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Equipo de Trabajo</h4>
         <div class="space-y-1.5 text-xs text-stone-500">
-          <p>S. Alape · S. Cardenas</p>
+          <p>M. Suarez  · H. Rodriguez</p>
+          <p>S. Alape   · S. Cardenas</p>
           <p>J. Palacio · S. Parra</p>
-          <p>H. Rodriguez · M. Suarez</p>
         </div>
-        <div class="mt-4 text-xs text-stone-600">
-          <p>Profesor:</p>
-          <p>D. Hernandez Castaneda</p>
-        </div>
+       
       </div>
     </div>
 
@@ -1034,10 +1031,10 @@
     <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
          style="border-top:1px solid rgba(255,255,255,0.05);">
       <p class="text-xs text-stone-600">
-        © 2026 SolNova · Universidad Nacional de Colombia · Ingeniería Económica 2026-1S
+        2026 RedSua · Universidad Nacional de Colombia · Ingeniería Económica 2026-1S
       </p>
       <p class="text-xs text-stone-700">
-        Datos: IDEAM · DANE · Ministerio de Minas y Energía
+        Datos: IDEAM · DANE · Minenergia · IRENA
       </p>
     </div>
   </div>

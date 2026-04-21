@@ -1,14 +1,1218 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulador de Inversiones - Proyecto de Ingeniería Económica</title>
-  <link rel="stylesheet" href="styles.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Investigación – RedSua</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --amber:   #F59E0B;
+      --amber-d: #D97706;
+      --amber-l: #FDE68A;
+      --orange:  #EA580C;
+      --dark:    #0C0A09;
+      --dark2:   #1C1917;
+      --dark3:   #292524;
+      --muted:   #A8A29E;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      color: #E7E5E4;
+      overflow-x: hidden;
+    }
+    h1,h2,h3,h4,.playfair { font-family:'Playfair Display',serif; }
+
+    /* ── NAVBAR ─────────────────────────────────────────────── */
+    #navbar {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      transition:background .4s,backdrop-filter .4s,box-shadow .4s;
+    }
+    #navbar.scrolled {
+      background:rgba(12,10,9,.92);
+      backdrop-filter:blur(12px);
+      box-shadow:0 1px 0 rgba(245,158,11,.15);
+    }
+    .nav-link {
+      position:relative; font-size:.875rem; font-weight:500;
+      color:#D6D3D1; letter-spacing:.03em; transition:color .2s; text-decoration:none;
+    }
+    .nav-link::after {
+      content:''; position:absolute; bottom:-3px; left:0; right:0; height:1px;
+      background:var(--amber); transform:scaleX(0); transform-origin:left; transition:transform .3s ease;
+    }
+    .nav-link:hover { color:var(--amber-l); }
+    .nav-link:hover::after { transform:scaleX(1); }
+
+    /* ── BUTTONS ──────────────────────────────────────────────── */
+    .btn-primary {
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:linear-gradient(135deg,var(--amber),var(--amber-d));
+      color:#0C0A09; font-weight:700; font-size:.9rem;
+      padding:.85rem 2rem; border-radius:12px; text-decoration:none;
+      transition:transform .2s,box-shadow .2s;
+    }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(245,158,11,.35); }
+    .btn-ghost {
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:transparent; color:#E7E5E4; font-weight:500; font-size:.9rem;
+      padding:.85rem 2rem; border-radius:12px; border:1px solid rgba(255,255,255,.2);
+      text-decoration:none; transition:border-color .2s,color .2s,transform .2s;
+    }
+    .btn-ghost:hover { border-color:rgba(245,158,11,.5); color:var(--amber-l); transform:translateY(-2px); }
+
+    /* ── GRADIENT & DECORATORS ───────────────────────────────── */
+    .gradient-text {
+      background:linear-gradient(135deg,var(--amber-l),var(--orange));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .amber-line {
+      display:inline-block; width:48px; height:3px;
+      background:linear-gradient(90deg,var(--amber),var(--orange)); border-radius:2px;
+    }
+    .solar-badge {
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.25);
+      border-radius:999px; padding:.4rem 1.1rem; font-size:.78rem; font-weight:600;
+      color:var(--amber); letter-spacing:.06em; text-transform:uppercase;
+    }
+    .section-divider { height:1px; background:linear-gradient(90deg,transparent,rgba(245,158,11,.15),transparent); }
+
+    /* ── HERO ────────────────────────────────────────────────── */
+    #hero {
+      min-height:70vh;
+      background:radial-gradient(ellipse 70% 80% at 30% 60%, #3D1500 0%, #1C0A00 40%, #0C0A09 100%);
+      position:relative; overflow:hidden; display:flex; align-items:center;
+    }
+    #hero::before {
+      content:''; position:absolute; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity:.4; pointer-events:none;
+    }
+    .hero-glow {
+      position:absolute; left:-10vw; top:50%; transform:translateY(-50%);
+      width:min(60vw,640px); height:min(60vw,640px); border-radius:50%;
+      background:radial-gradient(circle,rgba(245,158,11,.1) 0%,rgba(234,88,12,.06) 40%,transparent 70%);
+      animation:pulse-glow 7s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%,100% { transform:translateY(-50%) scale(1); opacity:1; }
+      50%      { transform:translateY(-50%) scale(1.05); opacity:.75; }
+    }
+    .hero-line { overflow:hidden; }
+    .hero-line span {
+      display:inline-block; transform:translateY(100%); opacity:0;
+      animation:slide-up .9s cubic-bezier(.16,1,.3,1) forwards;
+    }
+    .hero-line:nth-child(1) span { animation-delay:.2s; }
+    .hero-line:nth-child(2) span { animation-delay:.4s; }
+    .hero-sub  { opacity:0; transform:translateY(20px); animation:fade-in-up .8s ease forwards .8s; }
+    .hero-meta { opacity:0; animation:fade-in-up .8s ease forwards 1.1s; }
+    @keyframes slide-up  { to { transform:translateY(0); opacity:1; } }
+    @keyframes fade-in-up{ to { opacity:1; transform:translateY(0); } }
+
+    /* ── SCROLL REVEAL ───────────────────────────────────────── */
+    .reveal { opacity:0; transform:translateY(36px); transition:opacity .7s ease,transform .7s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .rd1{transition-delay:.1s;} .rd2{transition-delay:.2s;}
+    .rd3{transition-delay:.3s;} .rd4{transition-delay:.4s;}
+
+    /* ── TABLE OF CONTENTS ───────────────────────────────────── */
+    .toc-link {
+      display:flex; align-items:center; gap:.75rem;
+      padding:.65rem 1rem; border-radius:10px; text-decoration:none;
+      color:#A8A29E; font-size:.875rem; font-weight:500;
+      transition:background .2s,color .2s;
+      border:1px solid transparent;
+    }
+    .toc-link:hover {
+      background:rgba(245,158,11,.06);
+      color:var(--amber-l);
+      border-color:rgba(245,158,11,.12);
+    }
+    .toc-num {
+      width:22px; height:22px; border-radius:6px; flex-shrink:0;
+      background:rgba(245,158,11,.1); display:flex; align-items:center; justify-content:center;
+      font-size:.68rem; font-weight:700; color:var(--amber); font-family:'Playfair Display',serif;
+    }
+
+    /* ── CONTENT SECTIONS ────────────────────────────────────── */
+    .section-number {
+      font-family:'Playfair Display',serif; font-size:5rem; font-weight:900; line-height:1;
+      background:linear-gradient(135deg,var(--amber),var(--orange));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      opacity:.5; user-select:none;
+    }
+
+    /* ── RESEARCH CARDS ──────────────────────────────────────── */
+    .research-card {
+      background:var(--dark2); border:1px solid rgba(255,255,255,.06);
+      border-radius:20px; padding:2rem;
+      transition:background .3s,border-color .3s,transform .3s;
+    }
+    .research-card:hover {
+      background:var(--dark3); border-color:rgba(245,158,11,.18); transform:translateY(-3px);
+    }
+
+    /* ── FORMULA BOX ─────────────────────────────────────────── */
+    .formula-box {
+      background:rgba(0,0,0,.45); border:1px solid rgba(245,158,11,.2);
+      border-radius:14px; padding:1.25rem 1.75rem;
+      font-family:monospace; font-size:1rem; color:var(--amber-l);
+      letter-spacing:.02em; text-align:center;
+    }
+    .formula-legend {
+      background:rgba(245,158,11,.04); border-left:2px solid rgba(245,158,11,.3);
+      border-radius:0 10px 10px 0; padding:1rem 1.25rem;
+      margin-top:.75rem;
+    }
+
+    /* ── OBJECTIVE ITEMS ─────────────────────────────────────── */
+    .obj-item {
+      display:flex; gap:1rem; padding:1.25rem 0;
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .obj-item:last-child { border-bottom:none; }
+    .obj-num {
+      width:32px; height:32px; border-radius:8px; flex-shrink:0; margin-top:.1rem;
+      background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(234,88,12,.1));
+      border:1px solid rgba(245,158,11,.2);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.8rem; font-weight:700; color:var(--amber); font-family:'Playfair Display',serif;
+    }
+
+    /* ── METHODOLOGY STEPS ───────────────────────────────────── */
+    .method-step {
+      position:relative; padding-left:3.5rem; padding-bottom:2.5rem;
+    }
+    .method-step::before {
+      content:''; position:absolute; left:1.1rem; top:2.5rem; bottom:0; width:1px;
+      background:linear-gradient(180deg,rgba(245,158,11,.3),transparent);
+    }
+    .method-step:last-child::before { display:none; }
+    .method-step:last-child { padding-bottom:0; }
+    .method-dot {
+      position:absolute; left:0; top:.1rem;
+      width:2.25rem; height:2.25rem; border-radius:10px;
+      background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(234,88,12,.1));
+      border:1px solid rgba(245,158,11,.25);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.8rem; font-weight:900; color:var(--amber); font-family:'Playfair Display',serif;
+    }
+
+    /* ── DATA SOURCE CARDS ───────────────────────────────────── */
+    .source-card {
+      background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(28,25,23,.8));
+      border:1px solid rgba(245,158,11,.12); border-radius:16px; padding:1.5rem;
+      transition:border-color .3s,transform .3s,box-shadow .3s;
+    }
+    .source-card:hover {
+      border-color:rgba(245,158,11,.3); transform:translateY(-3px);
+      box-shadow:0 10px 35px rgba(245,158,11,.07);
+    }
+
+    /* ── CASE STUDY TABLE ────────────────────────────────────── */
+    .case-table { width:100%; border-collapse:collapse; font-size:.875rem; }
+    .case-table th {
+      background:rgba(245,158,11,.08); padding:.75rem 1rem;
+      text-align:left; font-size:.7rem; text-transform:uppercase;
+      letter-spacing:.07em; color:#78716C; font-weight:600;
+      border-bottom:1px solid rgba(245,158,11,.1);
+    }
+    .case-table td {
+      padding:.75rem 1rem; border-bottom:1px solid rgba(255,255,255,.04); color:#D6D3D1;
+    }
+    .case-table tr:last-child td { border-bottom:none; }
+    .case-table tr:hover td { background:rgba(245,158,11,.02); }
+    .case-table td.highlight { color:var(--amber); font-weight:700; }
+
+    /* ── QUOTE ───────────────────────────────────────────────── */
+    .quote-block {
+      border-left:3px solid var(--amber);
+      background:rgba(245,158,11,.04);
+      border-radius:0 16px 16px 0; padding:1.5rem 2rem;
+    }
+
+    /* ── BIBLIOGRAPHY ────────────────────────────────────────── */
+    .bib-item {
+      padding:1rem 0; border-bottom:1px solid rgba(255,255,255,.05);
+      display:flex; gap:1rem; align-items:flex-start;
+    }
+    .bib-item:last-child { border-bottom:none; }
+    .bib-dot {
+      width:6px; height:6px; border-radius:50%; background:var(--amber);
+      flex-shrink:0; margin-top:.45rem;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────────── */
+    footer { background:#080604; border-top:1px solid rgba(245,158,11,.1); }
+    .footer-link {
+      color:var(--muted); font-size:.875rem; text-decoration:none;
+      transition:color .2s; display:flex; align-items:center; gap:.4rem;
+    }
+    .footer-link:hover { color:var(--amber-l); }
+    #mobile-menu { background:rgba(12,10,9,.97); backdrop-filter:blur(16px); }
+  </style>
 </head>
 <body>
-    <h1>Investigacion, informacion de lo teorico</h1>
+
+<!-- NAVBAR -->
+<nav id="navbar" class="px-6 py-5 flex items-center justify-between">
+  <a href="index.html" class="flex items-center gap-2.5 no-underline">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+         style="background:linear-gradient(135deg,#F59E0B,#EA580C);">
+      <svg viewBox="0 0 24 24" fill="none" class="w-5 h-5 text-white" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+    </div>
+    <span class="font-bold text-lg tracking-tight text-white" style="font-family:'Playfair Display',serif;">
+      Red<span style="color:var(--amber)">Sua</span>
+    </span>
+  </a>
+
+  <div class="hidden md:flex items-center gap-8">
+    <a href="index.html"         class="nav-link">Inicio</a>
+    <a href="simulador.html"     class="nav-link">Simulador</a>
+    <a href="investigacion.html" class="nav-link" style="color:var(--amber)">Investigación</a>
+  </div>
+
+  <div class="hidden md:flex items-center gap-3">
+    <a href="simulador.html" class="btn-primary text-sm px-5 py-2.5">
+      Calcular ahorro
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+
+  <button class="md:hidden text-white p-2" onclick="toggleMenu()">
+    <svg id="icon-open"  class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+  </button>
+</nav>
+
+<div id="mobile-menu" class="hidden fixed inset-0 z-50 flex flex-col pt-20 px-8 pb-10 gap-6">
+  <button onclick="toggleMenu()" class="absolute top-5 right-6 text-white">
+    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+  </button>
+  <a href="index.html"         onclick="toggleMenu()" class="text-2xl font-semibold text-white playfair">Inicio</a>
+  <a href="simulador.html"     onclick="toggleMenu()" class="text-2xl font-semibold text-white playfair">Simulador</a>
+  <a href="investigacion.html" onclick="toggleMenu()" class="text-2xl font-semibold text-white playfair">Investigación</a>
+  <a href="simulador.html" class="btn-primary mt-4 justify-center">Calcular ahorro →</a>
+</div>
+
+
+<!-- HERO  -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <!-- Decoracion con linea vertical-->
+  <div style="position:absolute;right:12%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(245,158,11,.08),transparent);pointer-events:none;"></div>
+  <div style="position:absolute;right:18%;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(245,158,11,.04),transparent);pointer-events:none;"></div>
+
+  <div class="relative z-10 max-w-6xl mx-auto px-6 w-full pt-32 pb-20">
+    <div class="max-w-3xl">
+      <div class="solar-badge mb-8">📄 Documento de Investigación · 2026-1S</div>
+
+      <h1 class="text-5xl md:text-6xl font-black leading-[1.06] mb-6" style="letter-spacing:-.02em;">
+        <div class="hero-line"><span>Simulador económico</span></div>
+        <div class="hero-line"><span>para la <span class="gradient-text">viabilidad solar</span></span></div>
+      </h1>
+
+      <p class="hero-sub text-lg text-stone-400 max-w-2xl leading-relaxed mb-10">
+        Investigación académica que evalúa la rentabilidad de instalar paneles solares
+        en Cundinamarca usando datos regionales del IDEAM y otras fuentes, herramientas de ingeniería
+        económica y una arquitectura de software moderna.
+      </p>
+
+      <div class="hero-meta flex flex-wrap gap-8">
+        <div>
+          <p class="text-xs text-stone-600 uppercase tracking-wider mb-1">Autores</p>
+          <p class="text-sm text-stone-300">Grupo 4 · 6 investigadores</p>
+        </div>
+        <div class="w-px bg-stone-800"></div>
+        <div>
+          <p class="text-xs text-stone-600 uppercase tracking-wider mb-1">Institución</p>
+          <p class="text-sm text-stone-300">Universidad Nacional de Colombia</p>
+        </div>
+        <div class="w-px bg-stone-800"></div>
+        <div>
+          <p class="text-xs text-stone-600 uppercase tracking-wider mb-1">Período</p>
+          <p class="text-sm text-stone-300">2026 · Primer semestre</p>
+        </div>
+        <div class="w-px bg-stone-800"></div>
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!--  TABLA DE CONTENIDO CON ACCESO RÁPIDO -->
+<section style="background:var(--dark2);" class="py-16 px-6">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-[1fr_2fr] gap-12 items-start">
+
+    <div class="reveal">
+      <div class="amber-line mb-5"></div>
+      <h2 class="text-2xl font-bold mb-3">Tabla de contenido</h2>
+      <p class="text-stone-500 text-sm leading-relaxed mb-6">
+        El documento está estructurado en 11 secciones que cubren desde el planteamiento
+        del problema hasta los resultados esperados y el alcance del proyecto.
+      </p>
+      <a href="https://drive.google.com/file/d/1ohoJdk2vhKSOjxCHKttlZJj_u04H1z8S/view?usp=sharing"
+         target="_blank" rel="noopener" class="btn-primary text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        </svg>
+        Visualizar PDF completo
+      </a>
+    </div>
+
+    <div class="reveal rd2">
+      <nav class="grid sm:grid-cols-2 gap-1">
+        <a href="#sec-introduccion" class="toc-link"><span class="toc-num">1</span>Introducción</a>
+        <a href="#sec-introduccion"     class="toc-link"><span class="toc-num">2</span>Planteamiento del problema</a>
+        <a href="#sec-objetivos"    class="toc-link"><span class="toc-num">3</span>Objetivo general</a>
+        <a href="#sec-objetivos"    class="toc-link"><span class="toc-num">4</span>Objetivos específicos</a>
+        <a href="#sec-objetivos"class="toc-link"><span class="toc-num">5</span>Justificación</a>
+        <a href="#sec-marco"        class="toc-link"><span class="toc-num">6</span>Marco conceptual</a>
+        <a href="#sec-datos"        class="toc-link"><span class="toc-num">7</span>Fuentes de datos</a>
+        <a href="#sec-metodologia"  class="toc-link"><span class="toc-num">8</span>Metodología</a>
+        <a href="#sec-caso"         class="toc-link"><span class="toc-num">9</span>Caso de estudio</a>
+        <a href="#sec-caso"   class="toc-link"><span class="toc-num">10</span>Resultados esperados</a>
+        <a href="#sec-caso"   class="toc-link"><span class="toc-num">11</span>Alcance del proyecto</a>
+        <a href="#sec-bibliografia" class="toc-link"><span class="toc-num">★</span>Bibliografía</a>
+      </nav>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+
+<!--  SECCIÓN 1 — INTRODUCCIÓN Y PLANTEAMIENTO (Caps. 1 y 2 del documento)  -->
+<section id="sec-introduccion" class="py-28 px-6" style="background:var(--dark);">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="flex items-start gap-6 mb-16 reveal">
+      <div class="section-number">01</div>
+      <div class="pt-3">
+        <div class="amber-line mb-4"></div>
+        <h2 class="text-4xl md:text-5xl font-black leading-tight mb-2">
+          Introducción &amp;<br/><span class="gradient-text">Planteamiento</span>
+        </h2>
+        <p class="text-stone-500 text-sm">Capítulos 1 y 2 del documento de investigación</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-10 items-start">
+
+      <!-- Introducción -->
+      <div class="reveal">
+        <div style="background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2rem;">
+          <div class="flex items-center gap-3 mb-5">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(234,88,12,.1));border:1px solid rgba(245,158,11,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;">🌍</div>
+            <h3 class="text-lg font-bold">Contexto global</h3>
+          </div>
+          <p class="text-stone-400 leading-relaxed text-sm mb-4">
+            En las últimas décadas, el uso de energías renovables ha adquirido gran relevancia
+            debido a la necesidad de reducir las emisiones de carbono y disminuir la
+            dependencia de combustibles fósiles.
+          </p>
+          <p class="text-stone-400 leading-relaxed text-sm mb-4">
+            Entre estas alternativas, la energía solar fotovoltaica se ha consolidado como
+            una de las tecnologías más accesibles para la generación de electricidad.
+          </p>
+          <p class="text-stone-400 leading-relaxed text-sm">
+            Muchas instituciones, edificios públicos y universidades cuentan con superficies
+            disponibles en sus techos que podrían utilizarse para instalar paneles solares.
+            En ciudades como Bogotá, esta posibilidad resulta especialmente interesante
+            debido al alto consumo energético de edificios institucionales y académicos.
+          </p>
+        </div>
+      </div>
+
+      <!-- Planteamiento del problema -->
+      <div class="reveal rd2">
+        <div style="background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2rem;margin-bottom:1rem;">
+          <div class="flex items-center gap-3 mb-5">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(234,88,12,.1));border:1px solid rgba(245,158,11,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.9rem;">⚠️</div>
+            <h3 class="text-lg font-bold">El problema</h3>
+          </div>
+          <p class="text-stone-400 leading-relaxed text-sm mb-5">
+            Aunque la tecnología solar se ha vuelto cada vez más accesible, muchas personas
+            e instituciones no cuentan con herramientas sencillas que les permitan evaluar
+            si la instalación de paneles solares es económicamente conveniente en su caso
+            particular.
+          </p>
+          <p class="text-stone-500 text-xs uppercase tracking-widest mb-3">Factores que determinan la rentabilidad</p>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 text-sm text-stone-300">
+              <span style="color:var(--amber);font-size:.7rem;">◆</span>
+              La radiación solar disponible en la región
+            </div>
+            <div class="flex items-center gap-3 text-sm text-stone-300">
+              <span style="color:var(--amber);font-size:.7rem;">◆</span>
+              La superficie disponible para la instalación
+            </div>
+            <div class="flex items-center gap-3 text-sm text-stone-300">
+              <span style="color:var(--amber);font-size:.7rem;">◆</span>
+              El costo del sistema fotovoltaico
+            </div>
+            <div class="flex items-center gap-3 text-sm text-stone-300">
+              <span style="color:var(--amber);font-size:.7rem;">◆</span>
+              Las tarifas locales de electricidad
+            </div>
+          </div>
+        </div>
+        <div class="quote-block">
+          <p class="text-stone-300 text-sm leading-relaxed italic">
+            "Para realizar este tipo de análisis normalmente es necesario consultar varias
+            fuentes de información y realizar diferentes cálculos manuales. Esto dificulta
+            realizar una estimación rápida de la viabilidad del proyecto."
+          </p>
+          <p class="text-xs text-stone-600 mt-2">— Planteamiento del problema, cap. 2</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- SECCIÓN 2 — OBJETIVOS Y JUSTIFICACIÓN (Caps. 3, 4 y 5) -->
+<section id="sec-objetivos" class="py-28 px-6" style="background:var(--dark2);">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="flex items-start gap-6 mb-16 reveal">
+      <div class="section-number">02</div>
+      <div class="pt-3">
+        <div class="amber-line mb-4"></div>
+        <h2 class="text-4xl md:text-5xl font-black leading-tight mb-2">
+          Objetivos &amp;<br/><span class="gradient-text">Justificación</span>
+        </h2>
+        <p class="text-stone-500 text-sm">Capítulos 3, 4 y 5 del documento de investigación</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-[1.1fr_0.9fr] gap-10">
+
+      <!-- Objetivos -->
+      <div class="reveal">
+        <div style="background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:20px;padding:2rem;">
+          <h3 class="text-lg font-bold mb-1">Objetivo general</h3>
+          <p class="text-stone-400 text-sm leading-relaxed mb-6">
+            Desarrollar un simulador que permita estimar la viabilidad económica de instalar
+            paneles solares a partir de datos regionales de radiación solar y tarifas de
+            energía eléctrica.
+          </p>
+
+          <h4 class="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Objetivos específicos</h4>
+
+          <div>
+            <div class="obj-item">
+              <div class="obj-num">I</div>
+              <div>
+                <p class="text-sm text-stone-300 leading-relaxed">
+                  Estimar la producción anual de energía eléctrica a partir del área
+                  disponible para paneles solares.
+                </p>
+              </div>
+            </div>
+            <div class="obj-item">
+              <div class="obj-num">II</div>
+              <div>
+                <p class="text-sm text-stone-300 leading-relaxed">
+                  Calcular el ahorro económico anual basado en las tarifas de energía
+                  eléctrica de la región.
+                </p>
+              </div>
+            </div>
+            <div class="obj-item">
+              <div class="obj-num">III</div>
+              <div>
+                <p class="text-sm text-stone-300 leading-relaxed">
+                  Aplicar herramientas de ingeniería económica para estimar el tiempo
+                  de recuperación de la inversión.
+                </p>
+              </div>
+            </div>
+            <div class="obj-item">
+              <div class="obj-num">IV</div>
+              <div>
+                <p class="text-sm text-stone-300 leading-relaxed">
+                  Implementar un programa que permita realizar estos cálculos
+                  automáticamente a partir de los datos ingresados.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Justificación -->
+      <div class="space-y-5 reveal rd2">
+        <div style="background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(28,25,23,.8));border:1px solid rgba(245,158,11,.13);border-radius:20px;padding:2rem;">
+          <div style="font-size:2rem;margin-bottom:1rem;">⚖️</div>
+          <h3 class="text-base font-bold mb-3">Análisis costo-beneficio</h3>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            El análisis económico de proyectos energéticos es un campo importante dentro
+            de la ingeniería económica, ya que muchas decisiones tecnológicas dependen
+            de la relación entre costos iniciales y beneficios futuros.
+          </p>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(28,25,23,.8));border:1px solid rgba(245,158,11,.13);border-radius:20px;padding:2rem;">
+          <div style="font-size:2rem;margin-bottom:1rem;">📊</div>
+          <h3 class="text-base font-bold mb-3">Datos abiertos verificables</h3>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            El uso de datos abiertos provenientes de instituciones oficiales como el
+            IDEAM y el DANE permite fundamentar el análisis en información real y
+            verificable, otorgando credibilidad a las estimaciones generadas.
+          </p>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(28,25,23,.8));border:1px solid rgba(245,158,11,.13);border-radius:20px;padding:2rem;">
+          <div style="font-size:2rem;margin-bottom:1rem;">🎯</div>
+          <h3 class="text-base font-bold mb-3">Decisiones informadas</h3>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            Aunque el costo inicial puede ser considerable, los ahorros acumulados
+            a lo largo del tiempo pueden compensar la inversión. Contar con herramientas
+            que permitan estimar estos beneficios facilita la toma de decisiones.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- SECCIÓN 3 — MARCO CONCEPTUAL Cap. 6) -->
+<section id="sec-marco" class="py-28 px-6" style="background:var(--dark);">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="flex items-start gap-6 mb-16 reveal">
+      <div class="section-number">03</div>
+      <div class="pt-3">
+        <div class="amber-line mb-4"></div>
+        <h2 class="text-4xl md:text-5xl font-black leading-tight mb-2">
+          Marco<br/><span class="gradient-text">Conceptual</span>
+        </h2>
+        <p class="text-stone-500 text-sm">Capítulo 6 — Fundamentos de ingeniería económica</p>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+
+      <div class="research-card reveal">
+        <div style="font-size:1.75rem;margin-bottom:1rem;">💸</div>
+        <h3 class="text-lg font-bold mb-3">Flujos de efectivo</h3>
+        <p class="text-stone-400 text-sm leading-relaxed">
+          Los flujos de efectivo representan los ingresos o ahorros que se generan
+          a lo largo del tiempo como resultado de una inversión. En el caso de la
+          instalación de paneles solares, el flujo de efectivo positivo corresponde
+          al ahorro obtenido al reducir el consumo de electricidad proveniente de
+          la red eléctrica.
+        </p>
+      </div>
+
+      <div class="research-card reveal rd2">
+        <div style="font-size:1.75rem;margin-bottom:1rem;">⏳</div>
+        <h3 class="text-lg font-bold mb-3">Valor del dinero en el tiempo</h3>
+        <p class="text-stone-400 text-sm leading-relaxed">
+          Uno de los principios fundamentales de la ingeniería económica establece
+          que el dinero tiene diferente valor dependiendo del momento en que se
+          reciba o se pague, debido al efecto del interés compuesto. Este principio
+          es la base del análisis de inversiones.
+        </p>
+      </div>
+
+      <div class="research-card reveal rd3">
+        <div style="font-size:1.75rem;margin-bottom:1rem;">📉</div>
+        <h3 class="text-lg font-bold mb-3">Valor presente (VP)</h3>
+        <p class="text-stone-400 text-sm leading-relaxed">
+          El valor presente permite expresar beneficios futuros en términos del
+          valor del dinero en el presente, lo que facilita la comparación directa
+          entre costos actuales y beneficios futuros descontados.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Fórmula central -->
+    <div class="max-w-2xl mx-auto reveal">
+      <div style="background:var(--dark2);border:1px solid rgba(245,158,11,.15);border-radius:24px;padding:2.5rem;">
+        <p class="text-xs text-stone-500 uppercase tracking-widest text-center mb-6">
+          Fórmula principal del proyecto · Valor Presente de Serie Uniforme
+        </p>
+        <div class="formula-box text-xl mb-2">
+          P = A · [ (1 − (1 + i)⁻ⁿ) / i ]
+        </div>
+        <div class="formula-legend">
+          <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+            <div class="flex items-start gap-2">
+              <span style="color:var(--amber);font-weight:700;min-width:16px;">P</span>
+              <span class="text-stone-400">Valor presente de los beneficios (COP)</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span style="color:var(--amber);font-weight:700;min-width:16px;">A</span>
+              <span class="text-stone-400">Ahorro anual uniforme (COP/año)</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span style="color:var(--amber);font-weight:700;min-width:16px;">i</span>
+              <span class="text-stone-400">Tasa de interés o de oportunidad (%)</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span style="color:var(--amber);font-weight:700;min-width:16px;">n</span>
+              <span class="text-stone-400">Número de años del proyecto</span>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-stone-600 text-center mt-4">
+          Fuente: Blank &amp; Tarquin, <em>Engineering Economy</em>, 8.ª ed., McGraw-Hill, 2018
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SECCIÓN 4 — FUENTES DE DATOS Y METODOLOGÍA (Caps. 7 y 8) -->
+<section id="sec-datos" class="py-28 px-6" style="background:var(--dark2);">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="flex items-start gap-6 mb-16 reveal">
+      <div class="section-number">04</div>
+      <div class="pt-3">
+        <div class="amber-line mb-4"></div>
+        <h2 class="text-4xl md:text-5xl font-black leading-tight mb-2">
+          Datos &amp;<br/><span class="gradient-text">Metodología</span>
+        </h2>
+        <p class="text-stone-500 text-sm">Capítulos 7 y 8 — Fuentes y etapas del proyecto</p>
+      </div>
+    </div>
+
+    <!-- Fuentes de datos -->
+    <div class="mb-16">
+      <h3 class="text-xl font-bold mb-8 reveal">Fuentes de datos oficiales</h3>
+      <div class="grid sm:grid-cols-3 gap-5">
+
+        <div class="source-card reveal">
+          <div style="font-size:1.75rem;margin-bottom:.75rem;">🌤️</div>
+          <h4 class="font-bold text-sm mb-2" style="color:var(--amber-l);">IDEAM</h4>
+          <p class="text-xs text-stone-500 uppercase tracking-wider mb-3">Radiación solar</p>
+          <p class="text-sm text-stone-400 leading-relaxed">
+            Instituto de Hidrología, Meteorología y Estudios Ambientales. Publica
+            el Atlas de Radiación Solar de Colombia con registros climáticos que
+            permiten estimar la radiación solar promedio en diferentes regiones.
+          </p>
+          <a href="https://www.andi.com.co/uploads/radiacion.compressed.pdf"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center gap-1.5 mt-4 text-xs font-semibold"
+             style="color:var(--amber);">
+            Ver atlas solar →
+          </a>
+        </div>
+
+        <div class="source-card reveal rd2">
+          <div style="font-size:1.75rem;margin-bottom:.75rem;">📈</div>
+          <h4 class="font-bold text-sm mb-2" style="color:var(--amber-l);">DANE</h4>
+          <p class="text-xs text-stone-500 uppercase tracking-wider mb-3">Estadísticas regionales</p>
+          <p class="text-sm text-stone-400 leading-relaxed">
+            Departamento Administrativo Nacional de Estadística. Proporciona
+            estadísticas energéticas y regionales de Colombia, incluyendo
+            datos sobre tarifas de electricidad por región y sector.
+          </p>
+          <a href="https://www.dane.gov.co/files/operaciones/CAE-FE/bol-CAE-FE-2023p.pdf"
+             target="_blank" rel="noopener"
+             class="inline-flex items-center gap-1.5 mt-4 text-xs font-semibold"
+             style="color:var(--amber);">
+            Ver estadísticas →
+          </a>
+        </div>
+
+        <div class="source-card reveal rd3">
+          <div style="font-size:1.75rem;margin-bottom:.75rem;">⚡</div>
+          <h4 class="font-bold text-sm mb-2" style="color:var(--amber-l);">Minenergia</h4>
+          <p class="text-xs text-stone-500 uppercase tracking-wider mb-3">Sector eléctrico</p>
+          <p class="text-sm text-stone-400 leading-relaxed">
+            Ministerio de Minas y Energía. Plan Energético Nacional  2024–2054,
+            que contiene las proyecciones y políticas del sector energético
+            colombiano para los próximos decenios.
+          </p>
+          <span class="inline-flex items-center gap-1.5 mt-4 text-xs font-semibold text-stone-600">
+            Plan  2024–2054
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Fórmula de energía -->
+    <div class="mb-16 reveal">
+      <h3 class="text-xl font-bold mb-6">Modelo de estimación de energía</h3>
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div>
+          <p class="text-stone-400 text-sm leading-relaxed mb-5">
+            La energía generada anualmente se estima a partir de tres parámetros
+            físicos: el área disponible para los paneles, la radiación solar promedio
+            diaria del municipio (obtenida del IDEAM) y la eficiencia de conversión
+            de los paneles fotovoltaicos.
+          </p>
+          <div class="formula-box text-base">
+            E<sub>anual</sub> = Área × Radiación × 365 × Eficiencia
+          </div>
+        </div>
+        <div  style="background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:1.5rem;">
+          <p class="text-xs text-stone-500 uppercase tracking-widest mb-4">Ejemplo · Bogotá 300 m²</p>
+          <div class="space-y-3">
+            <div class="flex justify-between text-sm">
+              <span class="text-stone-500">Área</span>
+              <span style="color:var(--amber);">300 m²</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-stone-500">Radiación (IDEAM)</span>
+              <span style="color:var(--amber);">3.5 kWh/m²/día</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-stone-500">Días al año</span>
+              <span style="color:var(--amber);">× 365</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-stone-500">Eficiencia</span>
+              <span style="color:var(--amber);">× 18%</span>
+            </div>
+            <div style="height:1px;background:rgba(245,158,11,.15);"></div>
+            <div class="flex justify-between text-sm font-bold">
+              <span class="text-stone-300">Energía anual</span>
+              <span id="sec-metodologia" style="color:var(--amber);">≈ 69,000 kWh/año</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metodología: 4 etapas -->
+    <div  class="reveal">
+      <h3 class="text-xl font-bold mb-10">Las cuatro etapas del proyecto</h3>
+      <div class="max-w-2xl">
+
+        <div class="method-step">
+          <div class="method-dot">I</div>
+          <h4 class="font-bold text-base mb-2">Recolección de datos</h4>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            Se recopilan datos de radiación solar y tarifas de electricidad para
+            diferentes municipios de Cundinamarca. Esta información se almacena
+            en un archivo CSV estructurado que es utilizado por el motor de cálculo.
+          </p>
+        </div>
+
+        <div class="method-step">
+          <div class="method-dot">II</div>
+          <h4 class="font-bold text-base mb-2">Modelo de estimación de energía</h4>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            La energía generada se estima a partir de la relación entre el área
+            disponible para paneles, la radiación solar promedio del municipio y
+            la eficiencia de los paneles. El modelo incorpora degradación anual.
+          </p>
+        </div>
+
+        <div class="method-step">
+          <div class="method-dot">III</div>
+          <h4 class="font-bold text-base mb-2">Análisis económico</h4>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            A partir de la energía generada se calculan: el ahorro anual en
+            electricidad, el Valor Presente Neto (VPN), la Tasa Interna de
+            Retorno (TIR) y el tiempo de recuperación de la inversión con
+            interpolación lineal.
+          </p>
+        </div>
+
+        <div class="method-step">
+          <div class="method-dot">IV</div>
+          <h4 class="font-bold text-base mb-2">Desarrollo del simulador</h4>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            Se desarrolla la plataforma web que permite al usuario seleccionar
+            un municipio, ingresar el área disponible y el costo de instalación.
+            El simulador calcula automáticamente los indicadores de viabilidad y
+            presenta los resultados con gráficos y tablas.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SECCIÓN 5 — CASO DE ESTUDIO, RESULTADOS Y ALCANCE (Caps. 9, 10 y 11) -->
+<section id="sec-caso" class="py-28 px-6" style="background:var(--dark);">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="flex items-start gap-6 mb-16 reveal">
+      <div class="section-number">05</div>
+      <div class="pt-3">
+        <div class="amber-line mb-4"></div>
+        <h2 class="text-4xl md:text-5xl font-black leading-tight mb-2">
+          Caso de estudio,<br/><span class="gradient-text">Resultados &amp; Alcance</span>
+        </h2>
+        <p class="text-stone-500 text-sm">Capítulos 9, 10 y 11 del documento de investigación</p>
+      </div>
+    </div>
+
+    <!-- Caso de estudio -->
+    <div class="grid md:grid-cols-2 gap-10 mb-20">
+
+      <div class="reveal">
+        <h3 class="text-xl font-bold mb-3">Caso de estudio preliminar</h3>
+        <p class="text-stone-400 text-sm leading-relaxed mb-6">
+          Como ejemplo de aplicación, se realizó un análisis preliminar para un
+          edificio universitario ubicado en Bogotá, similar a los que se
+          encuentran en la Universidad Nacional de Colombia.
+        </p>
+        <div style="background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:20px;overflow:hidden;">
+          <table class="case-table">
+            <thead>
+              <tr>
+                <th>Parámetro</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Área disponible en el techo</td>
+                <td class="highlight">300 m²</td>
+              </tr>
+              <tr>
+                <td>Radiación solar promedio (Bogotá)</td>
+                <td class="highlight">3.5 kWh/m²/día</td>
+              </tr>
+              <tr>
+                <td>Eficiencia promedio de paneles</td>
+                <td class="highlight">18%</td>
+              </tr>
+              <tr>
+                <td>Tarifa promedio de electricidad</td>
+                <td class="highlight">800 COP/kWh</td>
+              </tr>
+              <tr>
+                <td>Producción anual estimada</td>
+                <td class="highlight">≈ 69,000 kWh/año</td>
+              </tr>
+              <tr>
+                <td>Ahorro anual estimado</td>
+                <td class="highlight">≈ $55,000,000 COP/año</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-stone-600 mt-3 leading-relaxed">
+          Estos resultados ilustran cómo la instalación de paneles solares puede
+          generar ahorros económicos significativos en el consumo eléctrico de un
+          edificio institucional.
+        </p>
+      </div>
+
+      <!-- Resultados esperados -->
+      <div class="space-y-4 reveal rd2" id="sec-resultados">
+        <h3 class="text-xl font-bold mb-2">Resultados esperados</h3>
+        <p class="text-stone-400 text-sm leading-relaxed mb-5">
+          El proyecto busca entregar cuatro productos concretos que demuestren
+          la aplicación de la ingeniería económica al sector energético.
+        </p>
+
+        <div style="background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(28,25,23,.8));border:1px solid rgba(245,158,11,.13);border-radius:16px;padding:1.25rem 1.5rem;display:flex;gap:1rem;align-items:flex-start;">
+          <span style="color:var(--amber);font-size:1.2rem;flex-shrink:0;margin-top:.1rem;">①</span>
+          <div>
+            <p class="text-sm font-semibold text-stone-200 mb-1">Modelo de estimación de energía solar</p>
+            <p class="text-xs text-stone-500">Fórmula parametrizable por ubicación, área y eficiencia de panel.</p>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(28,25,23,.8));border:1px solid rgba(245,158,11,.13);border-radius:16px;padding:1.25rem 1.5rem;display:flex;gap:1rem;align-items:flex-start;">
+          <span style="color:var(--amber);font-size:1.2rem;flex-shrink:0;margin-top:.1rem;">②</span>
+          <div>
+            <p class="text-sm font-semibold text-stone-200 mb-1">Análisis económico preliminar</p>
+            <p class="text-xs text-stone-500">VPN, TIR y período de recuperación con datos reales del IDEAM y DANE.</p>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(28,25,23,.8));border:1px solid rgba(245,158,11,.13);border-radius:16px;padding:1.25rem 1.5rem;display:flex;gap:1rem;align-items:flex-start;">
+          <span style="color:var(--amber);font-size:1.2rem;flex-shrink:0;margin-top:.1rem;">③</span>
+          <div>
+            <p class="text-sm font-semibold text-stone-200 mb-1">Simulador web interactivo</p>
+            <p class="text-xs text-stone-500">Plataforma online con gráficos, tablas y visualización de resultados en tiempo real.</p>
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(28,25,23,.8));border:1px solid rgba(245,158,11,.13);border-radius:16px;padding:1.25rem 1.5rem;display:flex;gap:1rem;align-items:flex-start;">
+          <span style="color:var(--amber);font-size:1.2rem;flex-shrink:0;margin-top:.1rem;">④</span>
+          <div>
+            <p class="text-sm font-semibold text-stone-200 mb-1">Ejemplo aplicado a edificio universitario</p>
+            <p class="text-xs text-stone-500">Caso de estudio concreto para un edificio en la Universidad Nacional, Bogotá.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Alcance -->
+    <div class="reveal">
+      <div style="background:var(--dark2);border:1px solid rgba(245,158,11,.12);border-radius:24px;padding:2.5rem;">
+        <div class="flex items-start gap-5">
+          <div style="font-size:2.5rem;flex-shrink:0;">🗺️</div>
+          <div>
+            <h3 class="text-xl font-bold mb-3">Alcance del proyecto</h3>
+            <p class="text-stone-400 text-sm leading-relaxed mb-4">
+              El modelo desarrollado corresponde a una <strong class="text-stone-200">estimación preliminar</strong> de
+              la viabilidad económica de sistemas solares. No se incluyen todos los
+              parámetros técnicos utilizados en el diseño detallado de instalaciones
+              fotovoltaicas, sino únicamente las variables necesarias para un análisis
+              económico inicial.
+            </p>
+            <p class="text-stone-400 text-sm leading-relaxed">
+              El objetivo principal del proyecto es demostrar la aplicación de
+              herramientas de ingeniería económica en la evaluación preliminar de
+              proyectos de energía solar fotovoltaica en el contexto colombiano.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SECCIÓN BIBLIOGRAFÍA -->
+<section id="sec-bibliografia" class="py-28 px-6" style="background:var(--dark2);">
+  <div class="max-w-4xl mx-auto">
+
+    <div class="reveal mb-12">
+      <div class="amber-line mb-5"></div>
+      <h2 class="text-3xl font-black mb-2">Bibliografía</h2>
+      <p class="text-stone-500 text-sm">Referencias del documento de investigación</p>
+    </div>
+
+    <div style="background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:20px;padding:2rem;" class="reveal rd1">
+      <div class="bib-item">
+        <div class="bib-dot"></div>
+        <div>
+          <p class="text-sm text-stone-300 leading-relaxed">
+            Instituto de Hidrología, Meteorología y Estudios Ambientales. (s. f.).
+            <em class="text-stone-400">Atlas de radiación solar de Colombia.</em>
+            Bogotá, Colombia: IDEAM.
+          </p>
+          <a href="https://www.ideam.gov.co" target="_blank" rel="noopener"
+             class="text-xs mt-1 inline-block" style="color:var(--amber);">
+            www.ideam.gov.co →
+          </a>
+        </div>
+      </div>
+
+      <div class="bib-item">
+        <div class="bib-dot"></div>
+        <div>
+          <p class="text-sm text-stone-300 leading-relaxed">
+            Departamento Administrativo Nacional de Estadística. (s. f.).
+            <em class="text-stone-400">Estadísticas energéticas y regionales de Colombia.</em>
+            Bogotá, Colombia: DANE.
+          </p>
+          <a href="https://www.dane.gov.co" target="_blank" rel="noopener"
+             class="text-xs mt-1 inline-block" style="color:var(--amber);">
+            www.dane.gov.co →
+          </a>
+        </div>
+      </div>
+
+      <div class="bib-item">
+        <div class="bib-dot"></div>
+        <div>
+          <p class="text-sm text-stone-300 leading-relaxed">
+            Ministerio de Minas y Energía. (2020).
+            <em class="text-stone-400">Plan energético nacional  2024–2054.</em>
+            Bogotá, Colombia: Gobierno de Colombia.
+          </p>
+        </div>
+      </div>
+
+      <div class="bib-item">
+        <div class="bib-dot"></div>
+        <div>
+          <p class="text-sm text-stone-300 leading-relaxed">
+            Blank, L. &amp; Tarquin, A. (2018).
+            <em class="text-stone-400">Engineering Economy</em> (8.ª ed.).
+            New York: McGraw-Hill Education.
+          </p>
+        </div>
+      </div>
+
+      <div class="bib-item">
+        <div class="bib-dot"></div>
+        <div>
+          <p class="text-sm text-stone-300 leading-relaxed">
+            International Renewable Energy Agency. (2021).
+            <em class="text-stone-400">Renewable power generation costs.</em>
+            Abu Dhabi: IRENA.
+          </p>
+          <a href="https://www.irena.org" target="_blank" rel="noopener"
+             class="text-xs mt-1 inline-block" style="color:var(--amber);">
+            www.irena.org →
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- CALL TO ACTION -->
+<section style="background:linear-gradient(135deg,#7C2D0E 0%,#431407 50%,#1C0A00 100%);position:relative;overflow:hidden;" class="py-24 px-6">
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(251,191,36,.1),transparent 60%);pointer-events:none;"></div>
+  <div class="relative z-10 max-w-3xl mx-auto text-center reveal">
+    <div class="solar-badge mx-auto mb-8">☀ Prueba el simulador ahora</div>
+    <h2 class="text-4xl md:text-5xl font-black mb-6 leading-tight">
+      De la investigación<br/>
+      <span style="background:linear-gradient(135deg,var(--amber-l),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+        a la acción.
+      </span>
+    </h2>
+    <p class="text-stone-300 mb-10 text-lg">
+      Los modelos de este documento están implementados en el simulador.
+      Calcula la viabilidad de tu proyecto fotovoltaico en segundos.
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <a href="simulador.html" class="btn-primary text-base px-8 py-4">
+        Abrir simulador
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="https://drive.google.com/file/d/1ohoJdk2vhKSOjxCHKttlZJj_u04H1z8S/view?usp=sharing"
+         target="_blank" rel="noopener" class="btn-ghost text-base px-8 py-4">
+        Leer documento PDF completo
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="px-6 pt-16 pb-10">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-4 gap-10 mb-12">
+
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-7 rounded-lg flex items-center justify-center"
+               style="background:linear-gradient(135deg,#F59E0B,#EA580C);">
+            <svg viewBox="0 0 24 24" fill="none" class="w-4 h-4 text-white" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+          </div>
+          <span class="font-bold text-white text-xl playfair">Red<span style="color:var(--amber);">Sua</span></span>
+        </div>
+        <p class="text-xs text-stone-500 leading-relaxed">
+          Simulador de viabilidad económica de paneles solares para Cundinamarca, Colombia.
+          Proyecto académico — Universidad Nacional de Colombia, 2026.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Plataforma</h4>
+        <div class="space-y-2.5">
+          <a href="index.html"         class="footer-link block">Inicio</a>
+          <a href="simulador.html"     class="footer-link block">Simulador</a>
+          <a href="investigacion.html" class="footer-link block">Investigación</a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Recursos</h4>
+        <div class="space-y-2.5">
+          <a href="https://github.com/miguelsrz/RedSua" target="_blank" rel="noopener" class="footer-link block">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/>
+            </svg>
+            Repositorio GitHub
+          </a>
+          <a href="https://drive.google.com/file/d/1ohoJdk2vhKSOjxCHKttlZJj_u04H1z8S/view?usp=sharing"
+             target="_blank" class="footer-link block">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            </svg>
+            Visualizar documento PDF
+          </a>
+          <a href="https://www.andi.com.co/uploads/radiacion.compressed.pdf" target="_blank" rel="noopener" class="footer-link block">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+            Atlas Solar IDEAM
+          </a>
+          <a href="https://www.dane.gov.co/files/operaciones/CAE-FE/bol-CAE-FE-2023p.pdf" target="_blank" rel="noopener" class="footer-link block">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+            </svg>
+            Datos DANE
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-widest text-stone-500 mb-4">Equipo de Trabajo</h4>
+        <div class="space-y-1.5 text-xs text-stone-500">
+          <p>M. Suarez  · H. Rodriguez</p>
+          <p>S. Alape   · S. Cardenas</p>
+          <p>J. Palacio · S. Parra</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
+         style="border-top:1px solid rgba(255,255,255,.05);">
+      <p class="text-xs text-stone-600">
+        2026 RedSua · Universidad Nacional de Colombia · Ingeniería Económica 2026-1S
+      </p>
+      <p class="text-xs text-stone-700">
+        Datos: IDEAM · DANE · Minenergia · IRENA
+      </p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- SCRIPTS -->
+<script>
+  // Navbar scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+    document.getElementById('icon-open').classList.toggle('hidden');
+    document.getElementById('icon-close').classList.toggle('hidden');
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
 </html>
