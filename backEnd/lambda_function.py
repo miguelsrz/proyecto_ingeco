@@ -3,7 +3,7 @@ from cargador_datos import obtener_region
 from calculos import calcular_viabilidad
 
 # Cambiar al dominio real antes de produccion
-ALLOWED_ORIGIN = "https://www.su-dominio.com"
+ALLOWED_ORIGIN = "https://redsua.co"
 
 HEADERS = {
     "Access-Control-Allow-Origin":  "*",
